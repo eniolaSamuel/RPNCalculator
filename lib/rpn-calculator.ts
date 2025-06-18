@@ -1,28 +1,15 @@
-/**
- * RPN Calculator Logic
- *
- * Evaluates Reverse Polish Notation expressions using a stack-based algorithm.
- */
-
 const SUPPORTED_OPERATORS = new Set(["+", "-", "*", "/", "^", "sqrt", "sin", "cos", "tan"])
 
-/**
- * Checks if a token is a valid number
- */
+
 function isNumber(token: string): boolean {
     return !isNaN(Number.parseFloat(token)) && isFinite(Number.parseFloat(token))
 }
 
-/**
- * Converts degrees to radians
- */
+
 function toRadians(degrees: number): number {
     return degrees * (Math.PI / 180)
 }
 
-/**
- * Processes a binary operator (requires 2 operands)
- */
 function processBinaryOperator(stack: number[], operator: string): void {
     if (stack.length < 2) {
         throw new Error(`Insufficient operands for operator '${operator}'`)
@@ -55,9 +42,6 @@ function processBinaryOperator(stack: number[], operator: string): void {
     }
 }
 
-/**
- * Processes a unary operator (requires 1 operand)
- */
 function processUnaryOperator(stack: number[], operator: string): void {
     if (stack.length < 1) {
         throw new Error(`Insufficient operands for operator '${operator}'`)
@@ -86,12 +70,7 @@ function processUnaryOperator(stack: number[], operator: string): void {
     }
 }
 
-/**
- * Evaluates an RPN expression
- * @param expression Space-separated RPN expression
- * @returns The calculated result
- * @throws Error if the expression is invalid
- */
+
 export function evaluateRPN(expression: string): number {
     if (!expression || expression.trim().length === 0) {
         throw new Error("Expression cannot be empty")
@@ -102,10 +81,8 @@ export function evaluateRPN(expression: string): number {
 
     for (const token of tokens) {
         if (isNumber(token)) {
-            // Push numbers onto the stack
             stack.push(Number.parseFloat(token))
         } else if (SUPPORTED_OPERATORS.has(token)) {
-            // Process operators
             if (["sqrt", "sin", "cos", "tan"].includes(token)) {
                 processUnaryOperator(stack, token)
             } else {
@@ -116,7 +93,6 @@ export function evaluateRPN(expression: string): number {
         }
     }
 
-    // After processing all tokens, there should be exactly one value left
     if (stack.length !== 1) {
         if (stack.length > 1) {
             throw new Error("Invalid expression: too many operands")
@@ -144,11 +120,9 @@ export function getEvaluationSteps(expression: string): { token: string; stack: 
 
     for (const token of tokens) {
         if (isNumber(token)) {
-            // Push numbers onto the stack
             stack.push(Number.parseFloat(token))
             steps.push({ token, stack: [...stack], action: `Push ${token}` })
         } else if (SUPPORTED_OPERATORS.has(token)) {
-            // Process operators
             if (["sqrt", "sin", "cos", "tan"].includes(token)) {
                 const a = stack.pop()!
                 let result: number
